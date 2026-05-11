@@ -16,6 +16,7 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ```elm
 nix develop
+nix run #configure
 ```
 
 ### run
