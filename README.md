@@ -58,17 +58,17 @@ releases are created automatically for [significant](https://www.conventionalcom
 
 | OS      | Architecture | Download                                                                                                                                        |
 | ------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | amd64        | [cpp-template_0.1.0_linux_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_linux_amd64)             |
-| Linux   | arm64        | [cpp-template_0.1.0_linux_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_linux_arm64)             |
-| Linux   | arm          | [cpp-template_0.1.0_linux_arm](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_linux_arm)                 |
-| MacOS   | amd64        | [cpp-template_0.1.0_darwin_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_darwin_amd64)           |
-| MacOS   | arm64        | [cpp-template_0.1.0_darwin_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_darwin_arm64)           |
-| Windows | amd64        | [cpp-template_0.1.0_windows_amd64.zip](https://github.com/spotdemo4/cpp-template/releases/download/v0.1.0/cpp-template_0.1.0_windows_amd64.zip) |
+| Linux   | amd64        | [cpp-template_0.2.0_linux_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_amd64)             |
+| Linux   | arm64        | [cpp-template_0.2.0_linux_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_arm64)             |
+| Linux   | arm          | [cpp-template_0.2.0_linux_arm](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_arm)                 |
+| MacOS   | amd64        | [cpp-template_0.2.0_darwin_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_darwin_amd64)           |
+| MacOS   | arm64        | [cpp-template_0.2.0_darwin_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_darwin_arm64)           |
+| Windows | amd64        | [cpp-template_0.2.0_windows_amd64.zip](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_windows_amd64.zip) |
 
 ### docker
 
 ```elm
-docker run ghcr.io/spotdemo4/cpp-template:0.1.0
+docker run ghcr.io/spotdemo4/cpp-template:0.2.0
 ```
 
 ### nix
