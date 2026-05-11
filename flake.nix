@@ -37,6 +37,7 @@
               # c++
               clang-tools
               cmake
+              gtest
               ninja
 
               # lint
@@ -92,11 +93,37 @@
               pname = "cpp-template";
               version = "0.0.1";
 
-              src = ./.;
+              src = fileset.toSource {
+                root = ./.;
+                fileset = fileset.unions [
+                  ./.clang-format
+                  ./.clang-tidy
+                  ./.clangd
+                  ./CMakeLists.txt
+                  ./src
+                  ./tests
+                ];
+              };
 
               nativeBuildInputs = with pkgs; [
                 cmake
               ];
+              buildInputs = with pkgs; [
+                gtest
+              ];
+
+              nativeCheckInputs = with pkgs; [
+                clang-tools
+              ];
+              checkPhase = ''
+                pushd ..
+
+                clang-format --dry-run --Werror $(find src -name '*.cpp' -o -name '*.hpp')
+                clang-tidy -p build $(find src -name '*.cpp' -o -name '*.hpp')
+                ctest --test-dir build
+
+                popd
+              '';
 
               meta = {
                 mainProgram = "cpp-template";
@@ -129,6 +156,8 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
+          cpp = self.packages.${system}.default;
+
           nix = {
             root = ./.;
             filter = file: file.hasExt "nix";

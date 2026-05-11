@@ -15,3 +15,10 @@ add_executable(main src/main.cpp)
 set_target_properties(main PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
 
 install(TARGETS main RUNTIME DESTINATION bin)
+
+enable_testing()
+find_package(GTest REQUIRED)
+include(GoogleTest)
+add_executable(tests tests/example_test.cpp)
+target_link_libraries(tests PRIVATE GTest::gtest_main)
+gtest_discover_tests(tests)
