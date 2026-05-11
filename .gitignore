@@ -6,3 +6,6 @@
 # nix
 /result*
 /.direnv/
+
+# cmake
+/build/

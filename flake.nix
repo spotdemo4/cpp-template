@@ -22,6 +22,7 @@
 
   outputs =
     {
+      self,
       trevpkgs,
       ...
     }:
@@ -36,6 +37,7 @@
               # c++
               clang-tools
               cmake
+              ninja
 
               # lint
               nixd
@@ -74,6 +76,45 @@
               flake-checker # nix
               zizmor # actions
             ];
+          };
+        };
+
+        # nix run [#...]
+        apps = pkgs.mkApps {
+          dev = "cmake --build build && ./build/main";
+          configure = "cmake -S . -B build -G Ninja";
+        };
+
+        # nix build [#...]
+        packages = {
+          default = pkgs.stdenv.mkDerivation (
+            final: with pkgs.lib; {
+              pname = "cpp-template";
+              version = "0.0.1";
+
+              src = ./.;
+
+              nativeBuildInputs = with pkgs; [
+                cmake
+              ];
+
+              meta = {
+                mainProgram = "cpp-template";
+                description = "c++ template";
+                license = licenses.mit;
+                platforms = platforms.all;
+                homepage = "https://github.com/spotdemo4/cpp-template";
+                changelog = "https://github.com/spotdemo4/cpp-template/releases/tag/v${final.version}";
+                downloadPage = "https://github.com/spotdemo4/cpp-template/releases/tag/v${final.version}";
+              };
+            }
+          );
+        };
+
+        # nix build #images.[...]
+        images = {
+          default = pkgs.mkImage {
+            src = self.packages.${system}.default;
           };
         };
 

@@ -1,4 +1,4 @@
-# template
+# c++ template
 
 [![check](https://img.shields.io/github/actions/workflow/status/spotdemo4/template/check.yaml?branch=main&logo=github&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://github.com/spotdemo4/template/actions/workflows/check.yaml)
 [![vulnerable](https://img.shields.io/github/actions/workflow/status/spotdemo4/template/vulnerable.yaml?branch=main&logo=github&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://github.com/spotdemo4/template/actions/workflows/vulnerable.yaml)
@@ -16,6 +16,19 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ```elm
 nix develop
+```
+
+### build
+
+```elm
+cmake -S . -B build -G Ninja
+cmake --build build
+```
+
+### run
+
+```elm
+./build/main
 ```
 
 ### format
