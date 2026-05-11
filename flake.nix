@@ -1,5 +1,5 @@
 {
-  description = "template";
+  description = "c++ template";
 
   nixConfig = {
     extra-substituters = [
