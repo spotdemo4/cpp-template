@@ -13,7 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(main src/main.cpp)
 set_target_properties(main PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
-target_link_libraries(main PRIVATE stdc++exp)
+target_link_libraries(main PRIVATE $<$<CXX_COMPILER_ID:GNU>:stdc++exp>)
 
 install(TARGETS main RUNTIME DESTINATION bin)
 
