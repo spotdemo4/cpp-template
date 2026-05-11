@@ -13,6 +13,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_executable(main src/main.cpp)
 set_target_properties(main PROPERTIES OUTPUT_NAME ${PROJECT_NAME})
+target_link_libraries(main PRIVATE stdc++exp)
 
 install(TARGETS main RUNTIME DESTINATION bin)
 
@@ -21,4 +22,4 @@ find_package(GTest REQUIRED)
 include(GoogleTest)
 add_executable(tests tests/example_test.cpp)
 target_link_libraries(tests PRIVATE GTest::gtest_main)
-gtest_discover_tests(tests)
+gtest_discover_tests(tests DISCOVERY_MODE PRE_TEST)
