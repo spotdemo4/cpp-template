@@ -1,0 +1,36 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: release
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+      contents: write
+      packages: write
+    steps:
+      - name: Initialize
+        uses: spotdemo4/nix-init@b0b33f024c18fa92f42f732e2e2001de507210cd # v1.45.0
+        with:
+          fetch_depth: 0
+          shell: release
+
+      - name: Release to GitHub
+        run: flake-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release to FlakeHub
+        uses: DeterminateSystems/flakehub-push@71f57208810a5d299fc6545350981de98fdbc860 # v6
+        with:
+          visibility: public

@@ -1,0 +1,26 @@
+name: check
+
+on:
+  pull_request:
+    branches: ["main"]
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    permissions:
+      id-token: write
+    steps:
+      - name: Initialize
+        uses: spotdemo4/nix-init@b0b33f024c18fa92f42f732e2e2001de507210cd # v1.45.0
+
+      - name: Check
+        run: nix flake check
