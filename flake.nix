@@ -114,12 +114,22 @@
 
               nativeCheckInputs = with pkgs; [
                 clang-tools
+                libclang
+                python3
               ];
               checkPhase = ''
                 pushd ..
+
                 clang-format --dry-run --Werror $(find src -name '*.cpp' -o -name '*.hpp')
-                clang-tidy -p build $(find src -name '*.cpp' -o -name '*.hpp')
+
+                cmake --build build --target tests
                 ctest --test-dir build
+
+                cp $(command -v run-clang-tidy) run-clang-tidy
+                patchShebangs --build run-clang-tidy
+                ./run-clang-tidy -p build -j=$(nproc) $(find src -name '*.cpp')
+                rm run-clang-tidy
+
                 popd
               '';
 
