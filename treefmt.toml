@@ -1,6 +1,6 @@
 #:schema https://www.schemastore.org/treefmt.json
 
-[formatter.clang-format]
+[formatter.clang]
 command = "clang-format"
 options = ["-i"]
 includes = ["*.cpp", "*.hpp"]

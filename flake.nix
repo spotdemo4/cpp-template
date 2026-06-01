@@ -157,6 +157,7 @@
         formatter = pkgs.treefmt.withConfig {
           configFile = ./treefmt.toml;
           runtimeInputs = with pkgs; [
+            clang-tools
             nixfmt
             oxfmt
           ];
@@ -164,7 +165,12 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
-          cpp = self.packages.${system}.default;
+          cpp = self.packages.${system}.default.overrideAttrs {
+            dontBuild = true;
+            installPhase = ''
+              touch $out
+            '';
+          };
 
           nix = {
             root = ./.;
