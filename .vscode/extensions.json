@@ -1,8 +1,3 @@
 {
-  "recommendations": [
-    "ziglang.vscode-zig",
-    "jnoortheen.nix-ide",
-    "oxc.oxc-vscode",
-    "tombi-toml.tombi"
-  ]
+  "recommendations": ["jnoortheen.nix-ide", "oxc.oxc-vscode", "tombi-toml.tombi"]
 }

@@ -117,11 +117,9 @@
               ];
               checkPhase = ''
                 pushd ..
-
                 clang-format --dry-run --Werror $(find src -name '*.cpp' -o -name '*.hpp')
                 clang-tidy -p build $(find src -name '*.cpp' -o -name '*.hpp')
                 ctest --test-dir build
-
                 popd
               '';
 
@@ -130,9 +128,9 @@
                 description = "c++ template";
                 license = licenses.mit;
                 platforms = platforms.all;
-                homepage = "https://github.com/spotdemo4/cpp-template";
-                changelog = "https://github.com/spotdemo4/cpp-template/releases/tag/v${final.version}";
-                downloadPage = "https://github.com/spotdemo4/cpp-template/releases/tag/v${final.version}";
+                homepage = "https://trev.zip/template/cpp";
+                changelog = "https://trev.zip/template/cpp/releases";
+                downloadPage = "https://trev.zip/template/cpp/releases/tag/v${final.version}";
               };
             }
           );

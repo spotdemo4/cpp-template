@@ -2,6 +2,7 @@ Checks: >
   bugprone-*,
   clang-analyzer-*,
   cppcoreguidelines-*,
+  misc-include-cleaner,
   modernize-*,
   performance-*,
   portability-*,
@@ -13,5 +14,5 @@ Checks: >
   -bugprone-exception-escape
 
 WarningsAsErrors: '*'
-HeaderFilterRegex: '^src/.*'
+HeaderFilterRegex: '.*/src/.*'
 FormatStyle: file

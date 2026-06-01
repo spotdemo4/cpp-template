@@ -3,7 +3,6 @@
 [![check](https://img.shields.io/github/actions/workflow/status/spotdemo4/cpp-template/check.yaml?branch=main&logo=github&logoColor=%23bac2de&label=check&labelColor=%23313244)](https://github.com/spotdemo4/cpp-template/actions/workflows/check.yaml)
 [![vulnerable](https://img.shields.io/github/actions/workflow/status/spotdemo4/cpp-template/vulnerable.yaml?branch=main&logo=github&logoColor=%23bac2de&label=vulnerable&labelColor=%23313244)](https://github.com/spotdemo4/cpp-template/actions/workflows/vulnerable.yaml)
 [![cpp](<https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fspotdemo4%2Fcpp-template%2Frefs%2Fheads%2Fmain%2FCMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)
-[![flakehub](https://img.shields.io/endpoint?url=https://flakehub.com/f/spotdemo4/cpp-template/badge&labelColor=%23313244)](https://flakehub.com/flake/spotdemo4/cpp-template)
 
 template for [C++](https://isocpp.org/)
 
@@ -15,64 +14,56 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
 ## getting started
 
-```elm
-nix develop
-nix run #configure
+```sh
+nix develop && nix run .#configure
 ```
 
 ### run
 
-```elm
-nix run #dev
+```sh
+nix run .#dev
 ```
 
 ### format
 
-```elm
+```sh
 nix fmt
 ```
 
 ### check
 
-```elm
+```sh
 nix flake check
 ```
 
 ### build
 
-```elm
+```sh
 nix build
 ```
 
 ### release
 
-```elm
-bumper "README.md"
+```sh
+bumper
 ```
 
 releases are created automatically for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
 
 ## use
 
-### download
-
-| OS      | Architecture | Download                                                                                                                                        |
-| ------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| Linux   | amd64        | [cpp-template_0.2.0_linux_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_amd64)             |
-| Linux   | arm64        | [cpp-template_0.2.0_linux_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_arm64)             |
-| Linux   | arm          | [cpp-template_0.2.0_linux_arm](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_linux_arm)                 |
-| MacOS   | amd64        | [cpp-template_0.2.0_darwin_amd64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_darwin_amd64)           |
-| MacOS   | arm64        | [cpp-template_0.2.0_darwin_arm64](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_darwin_arm64)           |
-| Windows | amd64        | [cpp-template_0.2.0_windows_amd64.zip](https://github.com/spotdemo4/cpp-template/releases/download/v0.2.0/cpp-template_0.2.0_windows_amd64.zip) |
-
 ### docker
 
-```elm
-docker run ghcr.io/spotdemo4/cpp-template:0.2.0
+```sh
+docker run trev.zip/template/cpp:latest
 ```
 
 ### nix
 
-```elm
-nix run github:spotdemo4/cpp-template
+```sh
+nix run git+https://trev.zip/template/cpp.git
 ```
+
+### download
+
+https://trev.zip/template/cpp/releases
