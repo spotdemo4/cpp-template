@@ -82,7 +82,7 @@
 
         # nix run [#...]
         apps = pkgs.mkApps {
-          dev = "cmake --build build && ./build/main";
+          dev = "cmake --build build && ./build/cpp-template";
           configure = "cmake -S . -B build -G Ninja";
         };
 
