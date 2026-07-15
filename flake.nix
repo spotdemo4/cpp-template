@@ -82,8 +82,22 @@
 
         # nix run [#...]
         apps = pkgs.mkApps {
-          dev = "cmake --build build && ./build/cpp-template";
-          configure = "cmake -S . -B build -G Ninja";
+          dev = {
+            script = "cmake --build build && ./build/cpp-template";
+            packages = with pkgs; [
+              cmake
+              ninja
+              stdenv.cc
+            ];
+          };
+          configure = {
+            script = "cmake -S . -B build -G Ninja";
+            packages = with pkgs; [
+              cmake
+              ninja
+              stdenv.cc
+            ];
+          };
         };
 
         # nix build [#...]
