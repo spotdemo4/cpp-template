@@ -40,16 +40,18 @@
               gtest
               ninja
 
-              # lint
+              vscode-json-languageserver # json
+              yaml-language-server # yaml
+              tombi # toml
+              oxfmt # format
+
+              # nix
               nixd
               nil
-
-              # format
               nixfmt
-              oxfmt
-              treefmt
 
               # util
+              treefmt
               bumper
             ];
           };
