@@ -82,26 +82,6 @@
           };
         };
 
-        # nix run [#...]
-        apps = pkgs.mkApps {
-          dev = {
-            script = "cmake --build build && ./build/cpp-template";
-            packages = with pkgs; [
-              cmake
-              ninja
-              stdenv.cc
-            ];
-          };
-          configure = {
-            script = "cmake -S . -B build -G Ninja";
-            packages = with pkgs; [
-              cmake
-              ninja
-              stdenv.cc
-            ];
-          };
-        };
-
         # nix build [#...]
         packages = {
           default = pkgs.stdenv.mkDerivation (

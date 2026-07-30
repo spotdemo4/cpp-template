@@ -17,13 +17,13 @@ part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 ```sh
 nix develop
 ./init.sh "Title" "Description"
-nix run .#configure
+cmake -S . -B build -G Ninja
 ```
 
 ### run
 
 ```sh
-nix run .#dev
+cmake --build build && ./build/cpp-template
 ```
 
 ### format
