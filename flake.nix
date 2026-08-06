@@ -114,6 +114,7 @@
                 python3
               ];
               checkPhase = ''
+                runHook preCheck
                 pushd ..
 
                 cmake --build build --target tests
@@ -125,6 +126,7 @@
                 rm run-clang-tidy
 
                 popd
+                runHook postCheck
               '';
 
               meta = {
@@ -162,7 +164,9 @@
           cpp = self.packages.${system}.default.overrideAttrs {
             dontBuild = true;
             installPhase = ''
+              runHook preInstall
               touch $out
+              runHook postInstall
             '';
           };
 
