@@ -1,0 +1,30 @@
+# C++ template - Git attributes
+# https://git-scm.com/docs/gitattributes
+
+# Linguist: lock file is generated and should not count toward language stats
+flake.lock linguist-generated=true
+
+# C++ source files use C++ diff driver for better hunk headers
+*.cpp diff=cpp
+*.hpp diff=cpp
+*.c diff=cpp
+*.h diff=cpp
+*.cc diff=cpp
+*.hh diff=cpp
+CMakeLists.txt diff=cpp
+
+# Normalize line endings to LF and auto-detect text files
+* text=auto eol=lf
+
+# Shell scripts must use LF
+*.sh text eol=lf
+*.bash text eol=lf
+
+# Windows batch files require CRLF (e.g., Gradle wrapper, MSVC scripts)
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+# Do not normalize patch/diff files (they may contain intentional CRLF)
+*.diff -text
+*.patch -text
