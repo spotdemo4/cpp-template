@@ -109,13 +109,12 @@
 
               nativeCheckInputs = with pkgs; [
                 clang-tools
+                clang
                 libclang
                 python3
               ];
               checkPhase = ''
                 pushd ..
-
-                clang-format --dry-run --Werror $(find src -name '*.cpp' -o -name '*.hpp')
 
                 cmake --build build --target tests
                 ctest --test-dir build
@@ -164,6 +163,16 @@
             dontBuild = true;
             installPhase = ''
               touch $out
+            '';
+          };
+
+          clang-format = {
+            root = ./.;
+            packages = with pkgs; [
+              clang-tools
+            ];
+            script = ''
+              clang-format --dry-run --Werror $(find . -name '*.cpp' -o -name '*.hpp')
             '';
           };
 
