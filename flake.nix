@@ -172,9 +172,9 @@
 
           clang-format = {
             root = ./.;
-            packages = with pkgs; [
-              clang-tools
-            ];
+            filter = file: file.hasExt "cpp" || file.hasExt "hpp";
+            include = [ ./.clang-format ];
+            packages = with pkgs; [ clang-tools ];
             script = ''
               clang-format --dry-run --Werror $(find . -name '*.cpp' -o -name '*.hpp')
             '';
@@ -183,9 +183,7 @@
           nix = {
             root = ./.;
             filter = file: file.hasExt "nix";
-            packages = with pkgs; [
-              nixfmt
-            ];
+            packages = with pkgs; [ nixfmt ];
             script = ''
               nixfmt --check "$file"
             '';
@@ -220,9 +218,7 @@
           renovate-gh = {
             root = ./.github;
             files = ./.github/renovate.json;
-            packages = with pkgs; [
-              renovate
-            ];
+            packages = with pkgs; [ renovate ];
             script = ''
               renovate-config-validator renovate.json
             '';
@@ -231,9 +227,7 @@
           renovate-fj = {
             root = ./.forgejo;
             files = ./.forgejo/renovate.json;
-            packages = with pkgs; [
-              renovate
-            ];
+            packages = with pkgs; [ renovate ];
             script = ''
               renovate-config-validator renovate.json
             '';
@@ -242,9 +236,7 @@
           config = {
             root = ./.;
             filter = file: file.hasExt "json" || file.hasExt "yaml" || file.hasExt "toml" || file.hasExt "md";
-            packages = with pkgs; [
-              oxfmt
-            ];
+            packages = with pkgs; [ oxfmt ];
             script = ''
               oxfmt --check
             '';
