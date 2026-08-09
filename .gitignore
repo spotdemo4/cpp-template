@@ -12,4 +12,5 @@
 /.direnv/
 
 # cmake
+.cache/
 /build/
