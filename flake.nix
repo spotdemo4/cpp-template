@@ -129,6 +129,12 @@
                 runHook postCheck
               '';
 
+              installCheckPhase = ''
+                runHook preInstallCheck
+                test "$("$out/bin/cpp-template")" = "Hello, world!"
+                runHook postInstallCheck
+              '';
+
               meta = {
                 mainProgram = "cpp-template";
                 description = "c++ template";
@@ -161,14 +167,7 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
-          cpp = self.packages.${system}.default.overrideAttrs {
-            dontBuild = true;
-            installPhase = ''
-              runHook preInstall
-              touch $out
-              runHook postInstall
-            '';
-          };
+          inherit (self.packages.${system}) default;
 
           clang-format = {
             root = ./.;
