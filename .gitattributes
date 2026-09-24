@@ -1,6 +1,9 @@
 # C++ template - Git attributes
 # https://git-scm.com/docs/gitattributes
 
+# Linguist: exclude template initializer from language stats
+/init.sh -linguist-detectable
+
 # Linguist: lock file is generated and should not count toward language stats
 flake.lock linguist-generated=true
 
