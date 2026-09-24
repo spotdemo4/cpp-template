@@ -176,8 +176,8 @@ old_slug=cpp-template
 old_description='c++ template'
 old_url=https://trev.zip/template/cpp
 replace_literal "$old_slug" "$slug" CMakeLists.txt flake.nix
-replace_literal '0.2.1' "$version" CMakeLists.txt
-replace_literal '0.2.2' "$version" flake.nix
+sed -i -E "/^project\($slug$/,/^\)/s@^([[:space:]]*VERSION )[[:graph:]]+@\1$version@" CMakeLists.txt
+sed -i -E "/^[[:space:]]*pname = \"$slug\";$/,/^[[:space:]]*version = /s@^([[:space:]]*version = \")[^\"]*@\1$version@" flake.nix
 replace_literal "$old_description" "$nix_description" flake.nix
 replace_literal "$old_url" "$web_url" flake.nix
 replace_literal 'Copyright (c) 2026 trev' "Copyright (c) $year $git_name" LICENSE
