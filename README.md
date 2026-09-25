@@ -7,53 +7,15 @@
 
 template for [C++](https://isocpp.org/)
 
+to initialize a new project, run:
+
+```sh
+./init.sh "Title" "Description"
+```
+
 part of [spotdemo4/templates](https://github.com/spotdemo4/templates)
 
-## requirements
-
-- [nix](https://nixos.org/)
-
-## getting started
-
-```sh
-nix develop
-./init.sh "Title" "Description"
-cmake -S . -B build -G Ninja
-```
-
-### run
-
-```sh
-cmake --build build && ./build/cpp-template
-```
-
-### format
-
-```sh
-nix fmt
-```
-
-### check
-
-```sh
-nix flake check
-```
-
-### build
-
-```sh
-nix build
-```
-
-### release
-
-```sh
-bumper
-```
-
-releases are created automatically for [significant](https://www.conventionalcommits.org/en/v1.0.0/#summary) changes
-
-## use
+## using
 
 ### docker
 
@@ -70,3 +32,7 @@ nix run git+https://trev.zip/template/cpp.git
 ### download
 
 https://trev.zip/template/cpp/releases
+
+## contributing
+
+see [CONTRIBUTING.md](CONTRIBUTING.md) for requirements and getting started

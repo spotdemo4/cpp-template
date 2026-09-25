@@ -175,7 +175,7 @@ changes_started=true
 old_slug=cpp-template
 old_description='c++ template'
 old_url=https://trev.zip/template/cpp
-replace_literal "$old_slug" "$slug" CMakeLists.txt flake.nix
+replace_literal "$old_slug" "$slug" CMakeLists.txt flake.nix CONTRIBUTING.md
 sed -i -E "/^project\($slug$/,/^\)/s@^([[:space:]]*VERSION )[[:graph:]]+@\1$version@" CMakeLists.txt
 sed -i -E "/^[[:space:]]*pname = \"$slug\";$/,/^[[:space:]]*version = /s@^([[:space:]]*version = \")[^\"]*@\1$version@" flake.nix
 replace_literal "$old_description" "$nix_description" flake.nix
@@ -201,10 +201,19 @@ encoded_lock_url=${encoded_lock_url//\//%252F}
 nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
 language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
 
+readme_sections=$(sed -n '/^## using$/,$p' README.md)
+readme_sections=${readme_sections//"$old_url"/"$web_url"}
+if $is_github; then
+  image="ghcr.io/${repo_path,,}:latest"
+else
+  image="$host/${repo_path,,}:latest"
+fi
+readme_sections=${readme_sections//trev.zip\/template\/cpp:latest/"$image"}
+
 {
   printf '# %s\n\n' "$title"
   printf '%s\n%s\n%s\n%s\n\n' "$check_badge" "$vulnerable_badge" "$nixpkgs_badge" "$language_badge"
-  printf '%s\n' "$description"
+  printf '%s\n\n%s\n' "$description" "$readme_sections"
 } >README.md
 
 remove_checks() {
