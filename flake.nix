@@ -149,6 +149,25 @@
           };
         };
 
+        # nix flake init -t git+https://trev.zip/template/cpp
+        templates = {
+          default = {
+            path = ./.;
+            description = "c++ template";
+            welcomeText = ''
+              # c++ template
+
+              `init.sh` requires a git repository with an `origin` remote:
+
+              ```sh
+              git init
+              git remote add origin <url>
+              bash init.sh "Title" "Description"
+              ```
+            '';
+          };
+        };
+
         # nix fmt
         formatter = pkgs.treefmt.withConfig {
           configFile = ./treefmt.toml;
