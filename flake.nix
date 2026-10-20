@@ -107,23 +107,12 @@
                 gtest
               ];
 
-              nativeCheckInputs = with pkgs; [
-                clang-tools
-                clang
-                libclang
-                python3
-              ];
               checkPhase = ''
                 runHook preCheck
                 pushd ..
 
                 cmake --build build --target tests
                 ctest --test-dir build
-
-                cp $(command -v run-clang-tidy) run-clang-tidy
-                patchShebangs --build run-clang-tidy
-                ./run-clang-tidy -p build -j=$(nproc) $(find src -name '*.cpp')
-                rm run-clang-tidy
 
                 popd
                 runHook postCheck
@@ -189,13 +178,24 @@
             '';
           };
 
-          clang-format = {
-            root = ./.;
-            filter = file: file.hasExt "cpp" || file.hasExt "hpp";
-            include = [ ./.clang-format ];
-            packages = with pkgs; [ clang-tools ];
+          cpp-lint = {
+            src = self.packages.${system}.default;
+            packages = with pkgs; [
+              clang-tools
+              clang
+              libclang
+              python3
+            ];
             script = ''
-              clang-format --dry-run --Werror $(find . -name '*.cpp' -o -name '*.hpp')
+              # configured in build/, the compile commands are all clang-tidy needs
+              cd ..
+
+              clang-format --dry-run --Werror $(find src tests -name '*.cpp' -o -name '*.hpp')
+
+              cp $(command -v run-clang-tidy) run-clang-tidy
+              patchShebangs --build run-clang-tidy
+              ./run-clang-tidy -p build -j=$(nproc) $(find src -name '*.cpp')
+              rm run-clang-tidy
             '';
           };
 
