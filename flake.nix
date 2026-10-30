@@ -107,6 +107,7 @@
                 gtest
               ];
 
+              doCheck = true;
               checkPhase = ''
                 runHook preCheck
                 pushd ..
