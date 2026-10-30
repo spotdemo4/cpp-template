@@ -124,8 +124,10 @@
                 license = licenses.mit;
                 platforms = platforms.all;
                 homepage = "https://trev.zip/template/cpp";
-                changelog = "https://trev.zip/template/cpp/releases";
-                downloadPage = "https://trev.zip/template/cpp/releases/tag/v${final.version}";
+                downloadPage = "https://trev.zip/template/cpp/releases";
+                changelog = "https://trev.zip/template/cpp/releases/tag/v${final.version}";
+                sourceProvenance = [ sourceTypes.fromSource ];
+                maintainers = [ maintainers.spotdemo4 ];
               };
             }
           );
