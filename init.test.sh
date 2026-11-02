@@ -199,6 +199,8 @@ test_library() (
   cat >"$tmp/consumer/CMakeLists.txt" <<'EOF'
 cmake_minimum_required(VERSION 3.28)
 project(consumer LANGUAGES CXX)
+# On Darwin, clang-scan-deps can't find the standard library headers
+set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 find_package(hello-lib REQUIRED)
 add_executable(consumer main.cpp)
 target_link_libraries(consumer PRIVATE hello-lib::hello-lib)
