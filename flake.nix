@@ -202,6 +202,26 @@
             '';
           };
 
+          init = {
+            root = ./.;
+            packages = with pkgs; [
+              cmake
+              git
+              gtest
+              jq
+              ninja
+              shellcheck
+              stdenv.cc
+              self.formatter.${system}
+            ];
+            # the cmake hook would configure the template instead of the projects it creates
+            dontUseCmakeConfigure = true;
+            script = ''
+              shellcheck init.sh init.test.sh
+              bash init.test.sh
+            '';
+          };
+
           nix = {
             root = ./.;
             filter = file: file.hasExt "nix";
