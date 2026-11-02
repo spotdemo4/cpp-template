@@ -207,12 +207,31 @@ if GIT_TERMINAL_PROMPT=0 git fetch --quiet --no-tags "$old_url" main 2>/dev/null
   done < <(git log --format='%T' HEAD)
 fi
 
+read -r -p 'Is this project a library? [y/N] ' reply || reply=
+if [[ $reply =~ ^[Yy]([Ee][Ss])?$ ]]; then
+  is_library=true
+  # C++ namespace names can't contain hyphens, be keywords, or be std
+  namespace=${slug//-/_}
+  case $namespace in
+    alignas | alignof | and | and_eq | asm | atomic_cancel | atomic_commit | atomic_noexcept | auto | bitand | bitor | bool | break | case | catch | char | char8_t | char16_t | char32_t | class | compl | concept | const | const_cast | consteval | constexpr | constinit | continue | contract_assert | co_await | co_return | co_yield | decltype | default | delete | do | double | dynamic_cast | else | enum | explicit | export | extern | false | float | for | friend | goto | if | inline | int | long | mutable | namespace | new | noexcept | not | not_eq | nullptr | operator | or | or_eq | private | protected | public | register | reinterpret_cast | requires | return | short | signed | sizeof | static | static_assert | static_cast | std | struct | switch | template | this | thread_local | throw | true | try | typedef | typeid | typename | union | unsigned | using | virtual | void | volatile | wchar_t | while | xor | xor_eq)
+      printf 'Title must produce a C++ namespace name that is not a keyword or std.\n' >&2
+      exit 1
+      ;;
+  esac
+else
+  is_library=false
+fi
+
 changes_started=true
 rm template.schema.json
 sed -i '/^        # nix flake init /,/^        };$/d' flake.nix
 if [[ -n $template_commit ]]; then
-  printf '{ "$schema": "%s", "url": "%s", "commit": "%s" }\n' \
-    "$old_url/raw/branch/main/template.schema.json" "$old_url" "$template_commit" >.template.json
+  library_field=
+  if $is_library; then
+    library_field=', "library": true'
+  fi
+  printf '{ "$schema": "%s", "url": "%s", "commit": "%s"%s }\n' \
+    "$old_url/raw/branch/main/template.schema.json" "$old_url" "$template_commit" "$library_field" >.template.json
 else
   printf 'Warning: unable to find the template commit; .template.json was not created.\n' >&2
 fi
@@ -223,6 +242,113 @@ sed -i -E "/^[[:space:]]*pname = \"$slug\";$/,/^[[:space:]]*version = /s@^([[:sp
 replace_literal "$old_description" "$nix_description" flake.nix
 replace_literal "$old_url" "$web_url" flake.nix
 replace_literal 'Copyright (c) 2026 trev' "Copyright (c) $year $git_name" LICENSE
+
+if $is_library; then
+  # A library starts without the program.
+  rm src/main.cpp tests/example_test.cpp
+  mkdir -p "include/$slug"
+  cat >"include/$slug/hello.hpp" <<EOF
+#ifndef ${namespace^^}_HELLO_HPP
+#define ${namespace^^}_HELLO_HPP
+
+#include <string>
+#include <string_view>
+
+namespace $namespace {
+
+    /// Returns a greeting for name.
+    std::string hello(std::string_view name);
+
+} // namespace $namespace
+
+#endif // ${namespace^^}_HELLO_HPP
+EOF
+  cat >src/hello.cpp <<EOF
+#include "$slug/hello.hpp"
+
+#include <format>
+#include <string>
+#include <string_view>
+
+namespace $namespace {
+
+    std::string hello(std::string_view name) {
+        return std::format("Hello, {}!", name);
+    }
+
+} // namespace $namespace
+EOF
+  cat >tests/hello_test.cpp <<EOF
+#include "$slug/hello.hpp"
+
+#include <gtest/gtest.h>
+
+TEST(Hello, Greeting) {
+    EXPECT_EQ($namespace::hello("world"), "Hello, world!");
+}
+EOF
+
+  # The header is installed with a package config, so projects can find_package
+  # the library
+  sed -i '/^add_executable(main /,$d' CMakeLists.txt
+  cat >>CMakeLists.txt <<EOF
+include(CMakePackageConfigHelpers)
+include(GNUInstallDirs)
+
+add_library($slug src/hello.cpp)
+add_library($slug::$slug ALIAS $slug)
+target_sources($slug PUBLIC
+  FILE_SET HEADERS
+  BASE_DIRS include
+  FILES include/$slug/hello.hpp
+)
+target_compile_features($slug PUBLIC cxx_std_\${CMAKE_CXX_STANDARD})
+
+install(TARGETS $slug EXPORT $slug FILE_SET HEADERS)
+install(EXPORT $slug
+  FILE $slug-config.cmake
+  NAMESPACE $slug::
+  DESTINATION \${CMAKE_INSTALL_LIBDIR}/cmake/$slug
+)
+write_basic_package_version_file(
+  \${CMAKE_CURRENT_BINARY_DIR}/$slug-config-version.cmake
+  COMPATIBILITY SameMajorVersion
+)
+install(
+  FILES \${CMAKE_CURRENT_BINARY_DIR}/$slug-config-version.cmake
+  DESTINATION \${CMAKE_INSTALL_LIBDIR}/cmake/$slug
+)
+
+enable_testing()
+find_package(GTest REQUIRED)
+include(GoogleTest)
+add_executable(tests tests/hello_test.cpp)
+target_link_libraries(tests PRIVATE $slug GTest::gtest_main)
+gtest_discover_tests(tests DISCOVERY_MODE PRE_TEST)
+EOF
+  sed -i 's@\.\*/src/\.\*@.*/(include|src)/.*@' .clang-tidy
+
+  # There's no program to run or put in an image, and the headers need to be
+  # built and linted.
+  sed -i '/^                mainProgram = /d' flake.nix
+  sed -i '/^        # nix build #images/,/^        };$/d' flake.nix
+  sed -i 's@^\( *\)\./src$@\1./include\n\1./src@; s@find src tests @find include src tests @' flake.nix
+  sed -i '/^### run$/,/^### format$/{/^### format$/!d}' CONTRIBUTING.md
+  sed -i 's@^\(clang-format -i \)@\1include/*/*.hpp @' CONTRIBUTING.md
+
+  # Releases only archive the library's headers and binaries.
+  for workflow in .github/workflows/release.yaml .forgejo/workflows/release.yaml; do
+    if [[ -f $workflow ]]; then
+      sed -i '/^            images\.x86_64-linux\.default\./d' "$workflow"
+    fi
+  done
+  if [[ -f .github/workflows/release.yaml ]]; then
+    sed -i '/^      packages: write$/d' .github/workflows/release.yaml
+  fi
+  if [[ -f .forgejo/workflows/release.yaml ]]; then
+    sed -i '/^          CONTAINER_REGISTRY_PASSWORD: /d' .forgejo/workflows/release.yaml
+  fi
+fi
 
 if [[ ${provider_host,,} == github.com ]]; then
   is_github=true
@@ -241,16 +367,27 @@ encoded_lock_url="${raw_url}/flake.lock"
 encoded_lock_url=${encoded_lock_url//:/%253A}
 encoded_lock_url=${encoded_lock_url//\//%252F}
 nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
-language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
+if $is_library; then
+  # Libraries show the minimum C++ standard they require.
+  language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=%3E%3DC%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
+else
+  language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
+fi
 
-readme_sections=$(sed -n '/^## using$/,$p' README.md)
-readme_sections=${readme_sections//"$old_url"/"$web_url"}
 if $is_github; then
   image="ghcr.io/${repo_path,,}:latest"
 else
   image="$host/${repo_path,,}:latest"
 fi
-readme_sections=${readme_sections//trev.zip\/template\/cpp:latest/"$image"}
+if $is_library; then
+  readme_sections=$(sed -n '/^## contributing$/,$p' README.md)
+  printf -v readme_sections '## using\n\n### cmake\n\n```cmake\ninclude(FetchContent)\nFetchContent_Declare(\n  %s\n  GIT_REPOSITORY %s.git\n  GIT_TAG main\n)\nFetchContent_MakeAvailable(%s)\n\ntarget_link_libraries(app PRIVATE %s::%s)\n```\n\n### download\n\n%s/releases\n\nthen add the extracted archive to `CMAKE_PREFIX_PATH`:\n\n```cmake\nfind_package(%s REQUIRED)\ntarget_link_libraries(app PRIVATE %s::%s)\n```\n\n%s' \
+    "$slug" "$web_url" "$slug" "$slug" "$slug" "$web_url" "$slug" "$slug" "$slug" "$readme_sections"
+else
+  readme_sections=$(sed -n '/^## using$/,$p' README.md)
+  readme_sections=${readme_sections//"$old_url"/"$web_url"}
+  readme_sections=${readme_sections//trev.zip\/template\/cpp:latest/"$image"}
+fi
 
 {
   printf '# %s\n\n' "$title"
