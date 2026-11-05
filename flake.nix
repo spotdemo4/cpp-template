@@ -86,7 +86,7 @@
           default = pkgs.stdenv.mkDerivation (
             final: with pkgs.lib; {
               pname = "cpp-template";
-              version = "0.8.0";
+              version = "0.9.0";
 
               src = fileset.toSource {
                 root = ./.;
