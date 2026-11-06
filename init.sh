@@ -406,12 +406,12 @@ write_readme() {
   encoded_lock_url="${raw_url}/flake.lock"
   encoded_lock_url=${encoded_lock_url//:/%253A}
   encoded_lock_url=${encoded_lock_url//\//%252F}
-  nixpkgs_badge="[![nixpkgs](https://img.shields.io/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
+  nixpkgs_badge="[![nixpkgs](https://shields.trev.zip/endpoint?url=https%3A%2F%2Fnix-shield.trev.zip%2Fbadge%3Furl%3D${encoded_lock_url}%26input%3Dnixpkgs&logoColor=%23bac2de&labelColor=%23313244&color=%235277C3)](https://nixos.org/)"
   if $is_library; then
     # Libraries show the minimum C++ standard they require.
-    language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=%3E%3DC%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
+    language_badge="[![cpp](<https://shields.trev.zip/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=%3E%3DC%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
   else
-    language_badge="[![cpp](<https://img.shields.io/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
+    language_badge="[![cpp](<https://shields.trev.zip/badge/dynamic/regex?url=${raw_url}/CMakeLists.txt&search=set%5C(CMAKE_CXX_STANDARD%20(.*%3F)%5C)&replace=C%2B%2B%241&logo=cplusplus&logoColor=%23bac2de&label=version&labelColor=%23313244&color=%2300599C>)](https://isocpp.org/std/status)"
   fi
 
   if $is_github; then
