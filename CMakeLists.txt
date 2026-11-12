@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.28)
 
 project(cpp-template
-  VERSION 0.10.0
+  VERSION 0.11.0
   LANGUAGES CXX
 )
 
