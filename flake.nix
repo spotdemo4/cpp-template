@@ -172,7 +172,8 @@
 
         # nix flake check
         checks = pkgs.mkChecks {
-          cpp = self.packages.${system}.default.overrideAttrs {
+          # replaces the generated package check to skip the heavy build
+          package_default = self.packages.${system}.default.overrideAttrs {
             dontBuild = true;
             installPhase = ''
               runHook preInstall
