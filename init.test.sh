@@ -125,7 +125,7 @@ assert_initialized() {
   assert_eq "$(git log --format='%an <%ae> %s')" "Test User <$email> chore: initialize project" 'commits'
   assert_eq "$(git status --porcelain --untracked-files=all)" '' 'worktree status'
   assert_eq "$(jq -r .commit .template.json)" "$upstream_commit" '.template.json commit'
-  assert_eq "$(git grep -n -e cpp-template -e trev.zip/template -e template/cpp -e 'c++ template' -e init.sh -e init.test.sh -- ':!.template.json' ':!AGENTS.md' || true)" '' 'template references'
+  assert_eq "$(git grep -n -e cpp-template -e trev.zip/template -e template/cpp -e 'c++ template' -e init.sh -e init.test.sh -- ':!.template.json' ':!.agents/skills/template-sync/SKILL.md' || true)" '' 'template references'
   assert_contains CMakeLists.txt "project($slug" 'VERSION 0.0.1'
   assert_contains flake.nix "pname = \"$slug\";" 'version = "0.0.1";'
   assert_contains LICENSE "Copyright (c) $(date +%Y) Test User"
